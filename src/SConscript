@@ -1,0 +1,10 @@
+Import('env')
+
+env['CCFLAGS'] += ' -fPIC'
+
+env['CPPPATH'] = ['#include']
+
+env.ParseConfig(env['CONFIG_PARSER'])
+
+env.StaticLibrary('rotatable',
+                  ['rotatable.c'])
