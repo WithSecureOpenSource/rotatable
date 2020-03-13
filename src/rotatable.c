@@ -4,6 +4,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 #include <dirent.h>
 #include <errno.h>
 #include <fsdyn/fsalloc.h>
@@ -12,6 +13,7 @@
 
 struct rotatable {
     FILE *outf;
+    mode_t mode;
     char *pathname_prefix;
     char *pathname_suffix;
     char *pathname;
@@ -33,7 +35,13 @@ rotatable_t *make_rotatable(const char *pathname_prefix,
     rot->rotate_size = rotate_size;
     rot->params = params;
     rot->outf = NULL;
+    rot->mode = 0666;
     return rot;
+}
+
+void rotatable_set_mode(rotatable_t *rot, mode_t mode)
+{
+    rot->mode = mode;
 }
 
 void destroy_rotatable(rotatable_t *rot)
@@ -223,9 +231,13 @@ bool rotatable_rename(rotatable_t *rot, const struct tm *tm, int usec)
 
 static bool reopen(rotatable_t *rot)
 {
-    FILE *f = fopen(rot->pathname, "a");
+    int fd = open(rot->pathname, O_CREAT | O_WRONLY | O_APPEND, rot->mode);
+    if (fd < 0)
+        return false;
+    FILE *f = fdopen(fd, "a");
     int err = errno;
     if (!f) {
+        close(fd);
         errno = err;
         return false;
     }

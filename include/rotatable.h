@@ -18,6 +18,15 @@ rotatable_t *make_rotatable(const char *pathname_prefix,
                             const char *pathname_suffix,
                             ssize_t rotate_size,
                             const rotatable_params_t *params);
+
+/* Rotatable files are created with 0666 & ~umask by default. This
+ * function changes the default mode from 0666 to something else. The
+ * umask still affects the permissions in the usual way.
+ *
+ * You should call this function right after calling
+ * make_rotatable(). */
+void rotatable_set_mode(rotatable_t *rot, mode_t mode);
+
 void destroy_rotatable(rotatable_t *rot);
 FILE *rotatable_file(rotatable_t *rot);
 bool rotatable_rename(rotatable_t *rot, const struct tm *tm, int usec);
