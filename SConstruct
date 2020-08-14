@@ -2,7 +2,7 @@ import os
 
 DIRECTORIES = [
     'src',
-    'components/cslp-rotatable' ]
+    'components/rotatable' ]
 
 def target_architectures():
     archs = os.getenv('FSARCHS', None)
@@ -34,7 +34,7 @@ def libconfig_builder(env):
     env.Install('.', '#fscomp-libconfig.json')
 
 def libconfig_parser():
-    return '$ARCHBUILDDIR/components/cslp-rotatable/.fscomp/libconfig'
+    return '$ARCHBUILDDIR/components/rotatable/.fscomp/libconfig'
 
 def pkgconfig_builder(env):
     pkgconfig = env.Substfile(
