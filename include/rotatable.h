@@ -1,7 +1,13 @@
+#pragma once
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <sys/types.h>
 #include <time.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Dynamic rotation parameters */
 typedef struct {
@@ -46,3 +52,7 @@ rotation_result_t rotatable_rotate_maybe(rotatable_t *rot,
  * could happen after you categorically close all open file descriptor
  * after a call to fork(), for example. */
 void rotatable_invalidate(rotatable_t *rot);
+
+#ifdef __cplusplus
+}
+#endif
