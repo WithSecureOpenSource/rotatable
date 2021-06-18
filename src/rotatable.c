@@ -1,15 +1,17 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <stdbool.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+#include "rotatable.h"
+
 #include <dirent.h>
 #include <errno.h>
-#include <fsdyn/fsalloc.h>
+#include <fcntl.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 #include <fsdyn/charstr.h>
-#include "rotatable.h"
+#include <fsdyn/fsalloc.h>
 
 struct rotatable {
     FILE *outf;
@@ -24,8 +26,7 @@ struct rotatable {
 #define NS_IN_S 1000000000LL
 
 rotatable_t *make_rotatable(const char *pathname_prefix,
-                            const char *pathname_suffix,
-                            ssize_t rotate_size,
+                            const char *pathname_suffix, ssize_t rotate_size,
                             const rotatable_params_t *params)
 {
     rotatable_t *rot = fsalloc(sizeof *rot);
@@ -81,7 +82,7 @@ static bool is_rotated_file(const char *file_prefix, const char *file_suffix,
 struct fileinfo {
     char *pathname;
     off_t size;
-    uint64_t mtime;             /* epoch nanoseconds */
+    uint64_t mtime; /* epoch nanoseconds */
 };
 
 /* Return the pathnames of rotated trace log files. The number of
@@ -94,8 +95,7 @@ struct fileinfo {
  * The array elements are not in any particular order.
  */
 static struct fileinfo *find_rot_files(const char *pathname_prefix,
-                                       const char *pathname_suffix,
-                                       int *pcount)
+                                       const char *pathname_suffix, int *pcount)
 {
     char *dirname;
     const char *slash = strrchr(pathname_prefix, '/');
@@ -190,7 +190,8 @@ static void enforce_params(rotatable_t *rot)
     uint64_t cutoff_time;
     if (rot->params->max_seconds >= 0)
         cutoff_time = (time(NULL) - rot->params->max_seconds) * NS_IN_S;
-    else cutoff_time = 0;
+    else
+        cutoff_time = 0;
     int i;
     for (i = 0; i < count; i++)
         if ((rot->params->max_files < 0 ||
@@ -199,7 +200,8 @@ static void enforce_params(rotatable_t *rot)
             (rot->params->max_bytes < 0 ||
              remaining_bytes <= (uint64_t) rot->params->max_bytes))
             break;
-        else remaining_bytes -= info[i].size;
+        else
+            remaining_bytes -= info[i].size;
     /* [i] now refers to the oldest trace log file that would still keep
      * us within the given params. The API spec calls for keeping those
      * files plus one more, so [i - 1] should be kept and older ones (if
@@ -216,9 +218,8 @@ bool rotatable_rename(rotatable_t *rot, const struct tm *tm, int usec)
 {
     char *timed_pathname =
         charstr_printf("%s-%04d-%02d-%02dT%02d:%02d:%02d.%06d%s",
-                       rot->pathname_prefix,
-                       tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
-                       tm->tm_hour, tm->tm_min, tm->tm_sec, usec,
+                       rot->pathname_prefix, tm->tm_year + 1900, tm->tm_mon + 1,
+                       tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, usec,
                        rot->pathname_suffix);
     if (rename(rot->pathname, timed_pathname) < 0) {
         fsfree(timed_pathname);
