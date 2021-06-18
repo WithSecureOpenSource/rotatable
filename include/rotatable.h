@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <sys/types.h>
 #include <time.h>
 
@@ -21,8 +21,7 @@ typedef struct {
 typedef struct rotatable rotatable_t;
 
 rotatable_t *make_rotatable(const char *pathname_prefix,
-                            const char *pathname_suffix,
-                            ssize_t rotate_size,
+                            const char *pathname_suffix, ssize_t rotate_size,
                             const rotatable_params_t *params);
 
 /* Rotatable files are created with 0666 & ~umask by default. This
@@ -40,12 +39,11 @@ bool rotatable_rename(rotatable_t *rot, const struct tm *tm, int usec);
 typedef enum {
     ROTATION_FAIL,
     ROTATION_OK,
-    ROTATION_ROTATED
+    ROTATION_ROTATED,
 } rotation_result_t;
 
-rotation_result_t rotatable_rotate_maybe(rotatable_t *rot,
-                                         const struct tm *tm, int usec,
-                                         bool force_reopen);
+rotation_result_t rotatable_rotate_maybe(rotatable_t *rot, const struct tm *tm,
+                                         int usec, bool force_reopen);
 
 /* Call rotatable_invalidate() if there is a chance you may have
  * closed the underlying file descriptor of the rotatable object. That
