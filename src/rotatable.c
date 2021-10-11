@@ -217,7 +217,7 @@ static void enforce_params(rotatable_t *rot)
 bool rotatable_rename(rotatable_t *rot, const struct tm *tm, int usec)
 {
     char *timed_pathname =
-        charstr_printf("%s-%04d-%02d-%02dT%02d:%02d:%02d.%06d%s",
+        charstr_printf("%s-%04d%02d%02d-%02d%02d%02d.%06d%s",
                        rot->pathname_prefix, tm->tm_year + 1900, tm->tm_mon + 1,
                        tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, usec,
                        rot->pathname_suffix);
