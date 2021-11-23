@@ -5,10 +5,11 @@ import os
 include = env.Install('include/rotatable', ['#include/rotatable.h'])
 lib = env.Install('lib', ['../../src/librotatable.a'])
 
-env.Alias(
-    'install',
-    env.Install(os.path.join(env['PREFIX'], 'include/rotatable'), include),
-)
-env.Alias('install', env.Install(os.path.join(env['PREFIX'], 'lib'), lib))
+if env["HOST_ARCH"] == env["ARCH"]:
+    env.Alias(
+        'install',
+        env.Install(os.path.join(env['PREFIX'], 'include/rotatable'), include),
+    )
+    env.Alias('install', env.Install(os.path.join(env['PREFIX'], 'lib'), lib))
 
-env['CONFIG_BUILDER'](env)
+env.FSEnvInstallCommonLibConfig()
