@@ -68,7 +68,7 @@ static bool is_rotated_file(const char *file_prefix, const char *file_suffix,
         p++, q++;
     if (*p)
         return false;
-    p = "-####-##-##T##:##:##.######"; /* infix template */
+    p = "-########-######.######"; /* infix template */
     while (*p && (*p == '#' || *p == *q))
         p++, q++;
     if (*p)
