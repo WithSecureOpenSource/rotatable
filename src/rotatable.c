@@ -195,7 +195,7 @@ static void enforce_params(rotatable_t *rot)
     int i;
     for (i = 0; i < count; i++)
         if ((rot->params->max_files < 0 ||
-             count - i <= rot->params->max_files) &&
+             count - i + 1 <= rot->params->max_files) &&
             info[i].mtime >= cutoff_time &&
             (rot->params->max_bytes < 0 ||
              remaining_bytes <= (uint64_t) rot->params->max_bytes))
@@ -235,6 +235,7 @@ static bool reopen(rotatable_t *rot)
     int fd = open(rot->pathname, O_CREAT | O_WRONLY | O_APPEND, rot->mode);
     if (fd < 0)
         return false;
+    (void) lseek(fd, 0, SEEK_END);
     FILE *f = fdopen(fd, "a");
     int err = errno;
     if (!f) {
