@@ -1,0 +1,20 @@
+Import('env')
+
+env['CCFLAGS'] += ' -O0'
+
+env['CPPPATH'] = [
+    '../components/rotatable/include'
+]
+
+env['LIBPATH'] = [
+    '../src'
+]
+
+env['LIBS'] = [
+    'rotatable'
+]
+
+env.ParseConfig(env['CONFIG_PARSER'])
+
+env.Program('testrot',
+            [ 'testrot.c' ])
