@@ -3,6 +3,7 @@ import fsenv
 
 DIRECTORIES = [
     'src',
+    'test',
     'components/rotatable' ]
 
 TARGET_DEFINES = {
