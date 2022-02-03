@@ -175,9 +175,7 @@ static int fileinfo_cmp(const void *arg1, const void *arg2)
 {
     const struct fileinfo *i1 = arg1;
     const struct fileinfo *i2 = arg2;
-    if (i1->mtime < i2->mtime)
-        return -1;
-    return i1->mtime > i2->mtime;
+    return strcmp(i1->pathname, i2->pathname);
 }
 
 static void enforce_params(rotatable_t *rot)
